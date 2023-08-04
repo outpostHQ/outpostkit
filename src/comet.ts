@@ -3,11 +3,11 @@ import { API_V1_URL } from './constants';
 import {
   type UpdateConfigPayload,
   type PromptPayload,
-  SetGenerationModelPayload,
-  ListConversationsPayload,
-  GetConversationPayload,
-  GetMessagePayload,
-  ProvideMessageFeedbackPayload,
+  type SetGenerationModelPayload,
+  type ListConversationsPayload,
+  type GetConversationPayload,
+  type GetMessagePayload,
+  type ProvideMessageFeedbackPayload,
 } from './types';
 
 export class Comet {

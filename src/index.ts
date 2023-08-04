@@ -1,2 +1,1 @@
-export { Comet } from './comet'
-export { Memory } from './memory'
+export { Comet } from './comet';
