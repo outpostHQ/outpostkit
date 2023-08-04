@@ -2,6 +2,7 @@ import { Comet } from '../src';
 
 void (async () => {
   try {
+    const input = 'What is ....?';
     const apiKey = process.env.API_KEY;
     if (!apiKey) throw new Error('No API Key Provided.');
 
@@ -11,8 +12,8 @@ void (async () => {
     const comet = new Comet(apiKey, cometId);
 
     const promptResponse = await comet.prompt({
-      input: 'What is useCallback',
       stream: false,
+      input,
       visitorId: 'dummy_user',
       channel: 'sdk-example',
     });

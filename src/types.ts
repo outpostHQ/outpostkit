@@ -24,12 +24,11 @@ export interface Comet {
   // index: (payload: IndexInput) => Promise<object>
   prompt: (payload: PromptPayload) => Promise<object>;
   updateConfig: (payload: UpdateConfigPayload) => Promise<void>;
-  // tune: (payload: TuningInput) => Promise<object>
-  // getOne: (id: string) => Promise<object>
-  // deleteOne: (id: string) => Promise<object>
-  // createResource: (payload: CreateResourcePayload) => Promise<object>
-  // uploadFileToUrl: (payload: UploadFileToUrlPayload) => Promise<object>
-  // uploadFile: (payload: UploadFilePayload) => Promise<object>
+  setGenerationModel: (payload: SetGenerationModelPayload) => Promise<void>;
+  listConversations: (payload: ListConversationsPayload) => Promise<object>;
+  getConversation: (payload: GetConversationPayload) => Promise<object>;
+  getMessage: (payload: GetMessagePayload) => Promise<object>;
+  provideMessageFeedback: (payload: ProvideMessageFeedbackPayload) => Promise<void>;
 }
 
 export interface IndexInput {
@@ -85,6 +84,25 @@ export interface PromptPayload {
   };
 }
 
+export interface ListConversationsPayload {
+  userId?: string;
+  channel?: string;
+  visitorId?: string;
+}
+export interface GetConversationPayload {
+  conversationId: string;
+}
+export interface GetMessagePayload {
+  messageId: string;
+}
+
+export interface ProvideMessageFeedbackPayload {
+  messageId: string;
+  vote?: boolean;
+  feedback?: string;
+  meta?: object;
+}
+
 export interface UpdateConfigPayload {
   max_tokens?: number;
   temperature?: number;
@@ -92,6 +110,13 @@ export interface UpdateConfigPayload {
   presence_penalty?: number;
   frequency_penalty?: number;
 }
+
+export interface SetGenerationModelPayload {
+  name: string;
+  type: 'text' | 'chat';
+  vendor: 'openai';
+}
+
 
 export interface SearchPayload {
   index: string

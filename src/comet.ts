@@ -1,6 +1,14 @@
 import axios, { type AxiosInstance } from 'axios';
 import { API_V1_URL } from './constants';
-import { type UpdateConfigPayload, type PromptPayload } from './types';
+import {
+  type UpdateConfigPayload,
+  type PromptPayload,
+  SetGenerationModelPayload,
+  ListConversationsPayload,
+  GetConversationPayload,
+  GetMessagePayload,
+  ProvideMessageFeedbackPayload,
+} from './types';
 
 export class Comet {
   apiKey: string;
@@ -27,6 +35,34 @@ export class Comet {
 
   async updateConfig(payload: UpdateConfigPayload): Promise<void> {
     await this.cometAPI.post(`/openai-configs`, payload);
+  }
+
+  async setGenerationModel(payload: SetGenerationModelPayload): Promise<void> {
+    await this.cometAPI.post(`/model`, payload);
+  }
+
+  async listConversations(payload: ListConversationsPayload): Promise<object> {
+    const { data } = await this.cometAPI.get(`/conversations`, {
+      params: payload,
+    });
+    return data;
+  }
+
+  async getConversation({ conversationId }: GetConversationPayload): Promise<object> {
+    const { data } = await this.cometAPI.get(`/conversations/${conversationId}`);
+    return data;
+  }
+
+  async getMessage({ messageId }: GetMessagePayload): Promise<object> {
+    const { data } = await this.cometAPI.get(`/messages/${messageId}`);
+    return data;
+  }
+
+  async provideMessageFeedback({
+    messageId,
+    ...feedbackBody
+  }: ProvideMessageFeedbackPayload): Promise<void> {
+    await this.cometAPI.post(`/messages/${messageId}/feedback`, feedbackBody);
   }
 }
 
