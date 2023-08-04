@@ -20,64 +20,70 @@ export interface Memory {
 }
 
 // Comet Client
-export interface Client {
-  index: (payload: IndexInput) => Promise<object>
-  search: (payload: SearchInput) => Promise<object[]>
-  tune: (payload: TuningInput) => Promise<object>
-  getOne: (id: string) => Promise<object>
-  deleteOne: (id: string) => Promise<object>
-  createResource: (payload: CreateResourcePayload) => Promise<object>
-  uploadFileToUrl: (payload: UploadFileToUrlPayload) => Promise<object>
-  uploadFile: (payload: UploadFilePayload) => Promise<object>
+export interface Comet {
+  // index: (payload: IndexInput) => Promise<object>
+  prompt: (payload: PromptPayload) => Promise<object>;
+  // tune: (payload: TuningInput) => Promise<object>
+  // getOne: (id: string) => Promise<object>
+  // deleteOne: (id: string) => Promise<object>
+  // createResource: (payload: CreateResourcePayload) => Promise<object>
+  // uploadFileToUrl: (payload: UploadFileToUrlPayload) => Promise<object>
+  // uploadFile: (payload: UploadFilePayload) => Promise<object>
 }
 
 export interface IndexInput {
-  indexId?: string
-  id?: string
-  imageBase64?: string
-  imageUrl?: string
-  text?: string
-  embedding?: number[]
-  metadata?: object
+  indexId?: string;
+  id?: string;
+  imageBase64?: string;
+  imageUrl?: string;
+  text?: string;
+  embedding?: number[];
+  metadata?: object;
 }
 
 export interface IndexPayload {
-  index: string
-  id?: string
-  imageBase64?: string
-  imageUrl?: string
-  text?: string
-  embedding?: number[]
-  metadata?: object
+  index: string;
+  id?: string;
+  imageBase64?: string;
+  imageUrl?: string;
+  text?: string;
+  embedding?: number[];
+  metadata?: object;
 }
 
 export interface BulkIndexPayload {
-  data: IndexPayload[]
+  data: IndexPayload[];
 }
 
-export type Operator = 'eq' | 'gt' | 'gte' | 'lt' | 'lte'
+export type Operator = 'eq' | 'gt' | 'gte' | 'lt' | 'lte';
 
 export interface Filter {
-  field: string
-  operator: Operator
-  value: string | number
+  field: string;
+  operator: Operator;
+  value: string | number;
 }
 
 export interface Filters {
-  and?: Filter[]
-  or?: Filter[]
+  and?: Filter[];
+  or?: Filter[];
 }
 
-export interface SearchInput {
-  indexId?: string
-  imageBase64?: string
-  imageUrl?: string
-  text?: string
-  embedding?: number[]
-  filters?: Filters
-  idsOnly?: boolean
-  limit?: number
+export interface PromptPayload {
+  input: string;
+  stream?: boolean;
+  prompt_variables?: Record<string, string>;
+  channel?: string;
+  visitorId?: string;
+  conversationId?: string;
+  openAICompletionsConfig?: {
+    max_tokens?: number;
+    temperature?: number;
+    top_p?: number;
+    presence_penalty?: number;
+    frequency_penalty?: number;
+  };
 }
+
 
 export interface SearchPayload {
   index: string
