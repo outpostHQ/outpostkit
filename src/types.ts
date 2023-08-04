@@ -23,6 +23,7 @@ export interface Memory {
 export interface Comet {
   // index: (payload: IndexInput) => Promise<object>
   prompt: (payload: PromptPayload) => Promise<object>;
+  updateConfig: (payload: UpdateConfigPayload) => Promise<void>;
   // tune: (payload: TuningInput) => Promise<object>
   // getOne: (id: string) => Promise<object>
   // deleteOne: (id: string) => Promise<object>
@@ -84,6 +85,13 @@ export interface PromptPayload {
   };
 }
 
+export interface UpdateConfigPayload {
+  max_tokens?: number;
+  temperature?: number;
+  top_p?: number;
+  presence_penalty?: number;
+  frequency_penalty?: number;
+}
 
 export interface SearchPayload {
   index: string

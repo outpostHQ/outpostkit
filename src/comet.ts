@@ -1,6 +1,6 @@
 import axios, { type AxiosInstance } from 'axios';
 import { API_V1_URL } from './constants';
-import { type PromptPayload } from './types';
+import { type UpdateConfigPayload, type PromptPayload } from './types';
 
 export class Comet {
   apiKey: string;
@@ -23,6 +23,10 @@ export class Comet {
   async prompt(payload: PromptPayload): Promise<object> {
     const { data } = await this.cometAPI.post(`/prompt`, payload);
     return data;
+  }
+
+  async updateConfig(payload: UpdateConfigPayload): Promise<void> {
+    await this.cometAPI.post(`/openai-configs`, payload);
   }
 }
 
