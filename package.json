@@ -1,7 +1,7 @@
 {
-  "name": "outpost-sdk",
+  "name": "outpostkit",
   "version": "0.0.1",
-  "description": "Outpost SDK",
+  "description": "The Outpost API Node.js SDK with TypeScript support.",
   "scripts": {
     "prettier": "prettier -c .",
     "format": "prettier -w .",
