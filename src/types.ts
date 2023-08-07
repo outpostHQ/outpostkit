@@ -20,7 +20,7 @@ export interface Memory {
 }
 
 // Comet Client
-export interface Comet {
+export interface IComet {
   // index: (payload: IndexInput) => Promise<object>
   prompt: (payload: PromptPayload) => Promise<object>;
   updateConfig: (payload: UpdateConfigPayload) => Promise<void>;
@@ -29,6 +29,7 @@ export interface Comet {
   getConversation: (payload: GetConversationPayload) => Promise<object>;
   getMessage: (payload: GetMessagePayload) => Promise<object>;
   provideMessageFeedback: (payload: ProvideMessageFeedbackPayload) => Promise<void>;
+  deleteComet: () => Promise<void>;
 }
 
 export interface IndexInput {

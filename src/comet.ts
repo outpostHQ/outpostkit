@@ -8,12 +8,13 @@ import {
   type GetConversationPayload,
   type GetMessagePayload,
   type ProvideMessageFeedbackPayload,
+  type IComet,
 } from './types';
 
-export class Comet {
-  apiKey: string;
-  cometId: string;
-  cometAPI: AxiosInstance;
+export class Comet implements IComet {
+  readonly apiKey: string;
+  readonly cometId: string;
+  private readonly cometAPI: AxiosInstance;
 
   constructor(apiKey: string, cometId: string) {
     this.apiKey = apiKey;
@@ -26,6 +27,11 @@ export class Comet {
         'Content-Type': 'application/json',
       },
     });
+  }
+
+  async getCometInfo(): Promise<object> {
+    const { data } = await this.cometAPI.get<object>('/');
+    return data;
   }
 
   async prompt(payload: PromptPayload): Promise<object> {
@@ -42,19 +48,19 @@ export class Comet {
   }
 
   async listConversations(payload: ListConversationsPayload): Promise<object> {
-    const { data } = await this.cometAPI.get(`/conversations`, {
+    const { data } = await this.cometAPI.get<object>(`/conversations`, {
       params: payload,
     });
     return data;
   }
 
   async getConversation({ conversationId }: GetConversationPayload): Promise<object> {
-    const { data } = await this.cometAPI.get(`/conversations/${conversationId}`);
+    const { data } = await this.cometAPI.get<object>(`/conversations/${conversationId}`);
     return data;
   }
 
   async getMessage({ messageId }: GetMessagePayload): Promise<object> {
-    const { data } = await this.cometAPI.get(`/messages/${messageId}`);
+    const { data } = await this.cometAPI.get<object>(`/messages/${messageId}`);
     return data;
   }
 
@@ -63,6 +69,10 @@ export class Comet {
     ...feedbackBody
   }: ProvideMessageFeedbackPayload): Promise<void> {
     await this.cometAPI.post(`/messages/${messageId}/feedback`, feedbackBody);
+  }
+
+  async deleteComet(): Promise<void> {
+    await this.cometAPI.delete('/');
   }
 }
 
