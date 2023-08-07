@@ -1,11 +1,11 @@
 {
-  "name": "outpost-sdk",
+  "name": "outpostkit",
   "version": "0.0.1",
-  "description": "Outpost JavaScript SDK",
+  "description": "The Outpost API Node.js SDK with TypeScript support.",
   "homepage": "https://outpost.run",
   "repository": {
     "type": "git",
-    "url": "https://github.com/outposthq/outpost-sdk.git"
+    "url": "https://github.com/outposthq/outpostkit.git"
   },
   "license": "MIT",
   "main": "dist/cjs/index.js",
