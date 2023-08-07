@@ -2,7 +2,7 @@ import { Comet } from '../src';
 
 void (async () => {
   try {
-    const input = 'What is ....?';
+    const input = 'How do you clear a prisma database?';
     const apiKey = process.env.API_KEY;
     if (!apiKey) throw new Error('No API Key Provided.');
 
