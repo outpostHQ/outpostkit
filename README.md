@@ -35,10 +35,11 @@ const response = comet.prompt({input:"what is useCallback?",stream:false});
 
 
 ### Available Routes
-| Route | Route Description |
-| `GET /api/v1/project` | Endpoint to receive Project lists. |
-| `GET /api/v1/comet` | Endpoint to receive Comet lists. |
-| `GET /api/v1/conflux` | Endpoint to receive Conflux lists. |
+| Route                   | Route Description                       |
+| ----------------------- | --------------------------------------- |
+| `GET /api/v1/project`   | Endpoint to receive Project lists.      |
+| `GET /api/v1/comet`     | Endpoint to receive Comet lists.        |
+| `GET /api/v1/conflux`   | Endpoint to receive Conflux lists.      |
 
 ## License
 
