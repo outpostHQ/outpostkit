@@ -40,7 +40,7 @@ export class Comet implements IComet {
   }
 
   async updateConfig(payload: UpdateConfigPayload): Promise<void> {
-    await this.cometAPI.post(`/openai-configs`, payload);
+    await this.cometAPI.put(`/`, payload);
   }
 
   async setGenerationModel(payload: SetGenerationModelPayload): Promise<void> {

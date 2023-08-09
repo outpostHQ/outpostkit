@@ -71,12 +71,12 @@ export interface Filters {
 
 export interface PromptPayload {
   input: string;
-  stream?: boolean;
   prompt_variables?: Record<string, string>;
   channel?: string;
   visitorId?: string;
   conversationId?: string;
-  openAICompletionsConfig?: {
+  configs?: {
+    stream?: boolean;
     max_tokens?: number;
     temperature?: number;
     top_p?: number;
@@ -110,6 +110,7 @@ export interface UpdateConfigPayload {
   top_p?: number;
   presence_penalty?: number;
   frequency_penalty?: number;
+  stream: false;
 }
 
 export interface SetGenerationModelPayload {
