@@ -22,7 +22,7 @@ export interface Memory {
 // Comet Client
 export interface IComet {
   // index: (payload: IndexInput) => Promise<object>
-  prompt: (payload: PromptPayload) => Promise<object>;
+  prompt: (payload: PromptPayload) => Promise<any>;
   updateConfig: (payload: UpdateConfigPayload) => Promise<void>;
   setGenerationModel: (payload: SetGenerationModelPayload) => Promise<void>;
   listConversations: (payload: ListConversationsPayload) => Promise<object>;
@@ -75,8 +75,8 @@ export interface PromptPayload {
   channel?: string;
   visitorId?: string;
   conversationId?: string;
+  stream: boolean;
   configs?: {
-    stream?: boolean;
     max_tokens?: number;
     temperature?: number;
     top_p?: number;
