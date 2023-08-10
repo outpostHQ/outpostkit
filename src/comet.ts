@@ -34,23 +34,27 @@ export class Comet implements IComet {
     return data;
   }
 
-  async prompt(payload: PromptPayload, handleNewText: (data: string) => void | Promise<void>) {
+  async prompt(payload: PromptPayload, handleNewText?: (data: string) => void | Promise<void>) {
     if (!payload.stream) {
       const { data } = await this.cometAPI.post(`/prompt`, payload, {
         responseType: 'stream',
       });
       let responsePrefixRecieved = false;
-      let response: string;
+      let responseText: string = '';
       data.on('data', (data) => {
         data = data.toString();
         if (data === '----RESPONSE----') responsePrefixRecieved = true;
         else if (responsePrefixRecieved) {
-          response = JSON.stringify(data);
+          responseText += data;
         } else {
-          handleNewText(data);
+          handleNewText?.(data);
         }
       });
-      return response;
+      try {
+        return JSON.parse(responseText);
+      } catch (e) {
+        throw new Error('There was some error parsing the response');
+      }
     } else {
       const { data } = await this.cometAPI.post(`/prompt`, payload);
       return data;
