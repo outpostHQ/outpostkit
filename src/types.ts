@@ -22,7 +22,10 @@ export interface Memory {
 // Comet Client
 export interface IComet {
   // index: (payload: IndexInput) => Promise<object>
-  prompt: (payload: PromptPayload) => Promise<any>;
+  prompt: (
+    payload: PromptPayload,
+    handleNewText: (data: string) => void | Promise<void>
+  ) => Promise<any>;
   updateConfig: (payload: UpdateConfigPayload) => Promise<void>;
   setGenerationModel: (payload: SetGenerationModelPayload) => Promise<void>;
   listConversations: (payload: ListConversationsPayload) => Promise<object>;
