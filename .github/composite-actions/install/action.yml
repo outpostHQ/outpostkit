@@ -5,9 +5,9 @@ runs:
   using: composite
   steps:
     - name: Install dependencies
-      uses: pnpm/action-setup@v2.2.2
+      uses: pnpm/action-setup@v3
       with:
-        version: 7
+        version: 8
 
     - name: Setup Node.js
       uses: actions/setup-node@v3
