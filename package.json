@@ -22,6 +22,7 @@
     "lint:fix": "eslint . --fix",
     "prepare": "npm run build",
     "prettier": "prettier -c .",
+    "release:dev": "changeset publish --tag dev",
     "release": "changeset publish"
   },
   "dependencies": {
