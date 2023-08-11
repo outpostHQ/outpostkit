@@ -22,6 +22,8 @@
     "lint:fix": "eslint . --fix",
     "prepare": "npm run build",
     "prettier": "prettier -c .",
+    "version": "changeset version",
+    "version:dev": "changeset version --snapshot dev",
     "release:dev": "changeset publish --tag dev",
     "release": "changeset publish"
   },
