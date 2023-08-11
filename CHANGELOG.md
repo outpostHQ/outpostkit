@@ -1,5 +1,11 @@
 # outpostkit
 
+## 0.0.6
+
+### Patch Changes
+
+- [#10](https://github.com/OutpostHQ/outpostkit/pull/10) [`f4ad28e`](https://github.com/OutpostHQ/outpostkit/commit/f4ad28e74c4ba273fe2687cf49f0506732e7cad5) Thanks [@aj-ya](https://github.com/aj-ya)! - added streaming support for web using native fetch
+
 ## 0.0.5
 
 ### Patch Changes
