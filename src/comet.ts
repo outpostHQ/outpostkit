@@ -10,6 +10,7 @@ import {
   type ProvideMessageFeedbackPayload,
   type IComet,
 } from './types';
+import { streamPromptWithAxios, streamPromptWithNativeFetch } from 'helpers';
 
 export class Comet implements IComet {
   readonly apiKey: string;
@@ -35,36 +36,11 @@ export class Comet implements IComet {
   }
 
   async prompt(payload: PromptPayload, handleNewText?: (data: string) => void | Promise<void>) {
+    //TODO: better error handling
     if (payload.stream) {
-      return new Promise((resolve, reject) => {
-        (async () => {
-          const { data: stream } = await this.cometAPI.post(`/prompt`, payload, {
-            responseType: 'stream',
-          });
-          let responsePrefixReceived = false;
-          let responseText: string = '';
-          stream.on('data', (data: BinaryData) => {
-            let chunk = data.toString();
-
-            if (!responsePrefixReceived && chunk.includes(PROMPT_STREAM_RESPONSE_PREFIX)) {
-              const splitChunks = chunk.split(PROMPT_STREAM_RESPONSE_PREFIX);
-              if (splitChunks.length === 2) {
-                handleNewText?.(splitChunks[0]);
-                responseText = responseText.concat(splitChunks[1] ?? '');
-              } else return reject('Could not parse the response');
-              responsePrefixReceived = true;
-            } else if (responsePrefixReceived) {
-              responseText = responseText.concat(chunk);
-            } else {
-              handleNewText?.(chunk);
-            }
-          });
-
-          stream.on('end', () => {
-            return resolve(responseText);
-          });
-        })();
-      });
+      if (typeof window !== 'undefined') {
+        return streamPromptWithNativeFetch(this.cometId, this.apiKey, payload, handleNewText);
+      } else return streamPromptWithAxios(this.cometAPI, payload, handleNewText);
     } else {
       const { data } = await this.cometAPI.post(`/prompt`, payload);
       return data;
