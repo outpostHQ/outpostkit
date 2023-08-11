@@ -30,7 +30,7 @@ const comet= new Comet('api-key','cometId');
 ### Now you can start prompting the comet service
 
 ```ts
-const response = comet.prompt({input:"what is useCallback?",configs:{stream:false}});
+const response = comet.prompt({input:"what is useCallback?",stream:false});
 ```
 
 
