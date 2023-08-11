@@ -1,5 +1,11 @@
 # outpostkit
 
+## 0.0.7
+
+### Patch Changes
+
+- [#12](https://github.com/OutpostHQ/outpostkit/pull/12) [`77c1274`](https://github.com/OutpostHQ/outpostkit/commit/77c127491302a088a5ec44c51b22a9cc5fd6c91a) Thanks [@aj-ya](https://github.com/aj-ya)! - bug fix: uint8array decode to string not working
+
 ## 0.0.6
 
 ### Patch Changes
