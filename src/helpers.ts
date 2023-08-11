@@ -62,7 +62,7 @@ export const streamPromptWithNativeFetch = (
             }
           } else {
             // Otherwise do something here to process current chunk
-            let chunk = value.toString();
+            let chunk = textDecoder.decode(value);
             if (!responsePrefixReceived && chunk.includes(PROMPT_STREAM_RESPONSE_PREFIX)) {
               const splitChunks = chunk.split(PROMPT_STREAM_RESPONSE_PREFIX);
               if (splitChunks.length === 2) {
