@@ -1,5 +1,13 @@
 # outpostkit
 
+## 0.0.8
+
+### Patch Changes
+
+- [`ec62e5c`](https://github.com/OutpostHQ/outpostkit/commit/ec62e5c270b33f2ea223c98b90f8fe720f25dc68) Thanks [@aj-ya](https://github.com/aj-ya)! - fixed: main thread getting blocked when the api request completes
+
+- [`38ef5ef`](https://github.com/OutpostHQ/outpostkit/commit/38ef5effd6e4698538bedc41608320941e93cfbd) Thanks [@aj-ya](https://github.com/aj-ya)! - Updated streaming for fetch to unblock thread
+
 ## 0.0.7
 
 ### Patch Changes
