@@ -35,16 +35,16 @@ export class Comet implements IComet {
   }
 
   async prompt(payload: PromptPayload, handleNewText?: (data: string) => void | Promise<void>) {
-    if (!payload.stream) {
-      const { data } = await this.cometAPI.post(`/prompt`, payload, {
+    if (payload.stream) {
+      const { data: stream } = await this.cometAPI.post(`/prompt`, payload, {
         responseType: 'stream',
       });
-      let responsePrefixRecieved = false;
+      let responsePrefixReceived = false;
       let responseText: string = '';
-      data.on('data', (data) => {
+      stream.on('data', (data) => {
         data = data.toString();
-        if (data === '----RESPONSE----') responsePrefixRecieved = true;
-        else if (responsePrefixRecieved) {
+        if (data === '----RESPONSE----') responsePrefixReceived = true;
+        else if (responsePrefixReceived) {
           responseText += data;
         } else {
           handleNewText?.(data);
