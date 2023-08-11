@@ -5,3 +5,5 @@ export const SUPPORTED_FILE_TYPES: string[] = [
   'application/vnd.ms-excel',
   'text/csv',
 ];
+
+export const PROMPT_STREAM_RESPONSE_PREFIX = '----RESPONSE----';

@@ -1,5 +1,5 @@
 import axios, { type AxiosInstance } from 'axios';
-import { API_V1_URL } from './constants';
+import { API_V1_URL, PROMPT_STREAM_RESPONSE_PREFIX } from './constants';
 import {
   type UpdateConfigPayload,
   type PromptPayload,
@@ -36,25 +36,35 @@ export class Comet implements IComet {
 
   async prompt(payload: PromptPayload, handleNewText?: (data: string) => void | Promise<void>) {
     if (payload.stream) {
-      const { data: stream } = await this.cometAPI.post(`/prompt`, payload, {
-        responseType: 'stream',
+      return new Promise((resolve, reject) => {
+        (async () => {
+          const { data: stream } = await this.cometAPI.post(`/prompt`, payload, {
+            responseType: 'stream',
+          });
+          let responsePrefixReceived = false;
+          let responseText: string = '';
+          stream.on('data', (data: BinaryData) => {
+            let chunk = data.toString();
+
+            if (!responsePrefixReceived && chunk.includes(PROMPT_STREAM_RESPONSE_PREFIX)) {
+              const splitChunks = chunk.split(PROMPT_STREAM_RESPONSE_PREFIX);
+              if (splitChunks.length === 2) {
+                handleNewText?.(splitChunks[0]);
+                responseText = responseText.concat(splitChunks[1] ?? '');
+              } else return reject('Could not parse the response');
+              responsePrefixReceived = true;
+            } else if (responsePrefixReceived) {
+              responseText = responseText.concat(chunk);
+            } else {
+              handleNewText?.(chunk);
+            }
+          });
+
+          stream.on('end', () => {
+            return resolve(responseText);
+          });
+        })();
       });
-      let responsePrefixReceived = false;
-      let responseText: string = '';
-      stream.on('data', (data) => {
-        data = data.toString();
-        if (data === '----RESPONSE----') responsePrefixReceived = true;
-        else if (responsePrefixReceived) {
-          responseText += data;
-        } else {
-          handleNewText?.(data);
-        }
-      });
-      try {
-        return JSON.parse(responseText);
-      } catch (e) {
-        throw new Error('There was some error parsing the response');
-      }
     } else {
       const { data } = await this.cometAPI.post(`/prompt`, payload);
       return data;
