@@ -39,8 +39,8 @@ export class Comet implements IComet {
     //TODO: better error handling
     if (payload.stream) {
       if (typeof window !== 'undefined') {
-        return streamPromptWithNativeFetch(this.cometId, this.apiKey, payload, handleNewText);
-      } else return streamPromptWithAxios(this.cometAPI, payload, handleNewText);
+        return await streamPromptWithNativeFetch(this.cometId, this.apiKey, payload, handleNewText);
+      } else return await streamPromptWithAxios(this.cometAPI, payload, handleNewText);
     } else {
       const { data } = await this.cometAPI.post(`/prompt`, payload);
       return data;

@@ -12,14 +12,13 @@ export function sanitizeFilename(filename: string): string {
 
   return `${sanitized || 'file'}${extension ? '.' + extension : ''}`;
 }
-
 export const streamPromptWithNativeFetch = (
   cometId: string,
   apiKey: string,
   payload: PromptPayload,
   handleNewText?: (token: string) => void | Promise<void>
 ) => {
-  return new Promise((resolve, reject) => {
+  return new Promise<{ response: string; referencePaths: string[] }>((resolve, reject) => {
     (async () => {
       const response = await fetch(`${API_V1_URL}/comets/${cometId}/prompt`, {
         method: 'POST',
@@ -31,43 +30,16 @@ export const streamPromptWithNativeFetch = (
         },
       });
       if (response.ok) {
+        if (!response.body) return reject('No response body found.');
         const reader = response.body.getReader();
         let responsePrefixReceived = false;
         let responseText: string = '';
         const textDecoder = new TextDecoder();
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) {
-            if (value) {
-              // Do something with last chunk of data then exit reader
-              let chunk = textDecoder.decode(value);
-
-              if (!responsePrefixReceived && chunk.includes(PROMPT_STREAM_RESPONSE_PREFIX)) {
-                const splitChunks = chunk.split(PROMPT_STREAM_RESPONSE_PREFIX);
-                if (splitChunks.length === 2) {
-                  handleNewText?.(splitChunks[0]);
-                  responseText = responseText.concat(splitChunks[1] ?? '');
-                } else return reject('Could not parse the response');
-                responsePrefixReceived = true;
-              } else if (responsePrefixReceived) {
-                responseText = responseText.concat(chunk);
-              } else {
-                handleNewText?.(chunk);
-              }
-              try {
-                return resolve(JSON.parse(responseText));
-              } catch (e) {
-                return reject('Could not parse the response');
-              }
-            }else{
-              try {
-                return resolve(JSON.parse(responseText));
-              } catch (e) {
-                return reject('Could not parse the response');
-              }
-            }
-          } else {
-            // Otherwise do something here to process current chunk
+        let done: boolean = false,
+          value: Uint8Array | undefined;
+        while (!done) {
+          ({ done, value } = await reader.read());
+          if (value) {
             let chunk = textDecoder.decode(value);
             if (!responsePrefixReceived && chunk.includes(PROMPT_STREAM_RESPONSE_PREFIX)) {
               const splitChunks = chunk.split(PROMPT_STREAM_RESPONSE_PREFIX);
@@ -80,6 +52,18 @@ export const streamPromptWithNativeFetch = (
               responseText = responseText.concat(chunk);
             } else {
               handleNewText?.(chunk);
+            }
+          }
+          if (done) {
+            try {
+              return resolve(
+                JSON.parse(responseText) as {
+                  response: string;
+                  referencePaths: string[];
+                }
+              );
+            } catch (e) {
+              return reject('Could not parse the response');
             }
           }
         }
