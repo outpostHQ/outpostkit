@@ -59,6 +59,12 @@ export const streamPromptWithNativeFetch = (
               } catch (e) {
                 return reject('Could not parse the response');
               }
+            }else{
+              try {
+                return resolve(JSON.parse(responseText));
+              } catch (e) {
+                return reject('Could not parse the response');
+              }
             }
           } else {
             // Otherwise do something here to process current chunk
