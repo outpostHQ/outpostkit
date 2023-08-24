@@ -1,5 +1,11 @@
 # outpostkit
 
+## 0.0.9
+
+### Patch Changes
+
+- [#15](https://github.com/OutpostHQ/outpostkit/pull/15) [`24f8ce4`](https://github.com/OutpostHQ/outpostkit/commit/24f8ce4c305f4a9a2be76273547e118279ef7d7b) Thanks [@aj-ya](https://github.com/aj-ya)! - added endpoints for sessions and conversations
+
 ## 0.0.8
 
 ### Patch Changes
