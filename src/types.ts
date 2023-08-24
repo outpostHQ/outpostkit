@@ -90,6 +90,8 @@ export interface PromptPayload {
 
 export interface ListConversationsPayload {
   sessionId: string;
+  messages?: boolean;
+  stats?: boolean;
 }
 
 export interface ListSessionsPayload {

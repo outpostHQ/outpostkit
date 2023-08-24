@@ -57,7 +57,7 @@ export class Comet implements IComet {
     await this.cometAPI.post(`/model`, payload);
   }
 
-  async listSessions(payload: ListSessionsPayload): Promise<object> {
+  async listSessions(payload: ListSessionsPayload = {}): Promise<object> {
     const { data } = await this.cometAPI.get<object>(`/sessions`, {
       params: payload,
     });
@@ -69,9 +69,16 @@ export class Comet implements IComet {
     return data;
   }
 
-  async listConversations({ sessionId, ...payload }: ListConversationsPayload): Promise<object> {
+  async listConversations({
+    sessionId,
+    stats,
+    messages,
+  }: ListConversationsPayload): Promise<object> {
     const { data } = await this.cometAPI.get<object>(`/sessions/${sessionId}/conversations`, {
-      params: payload,
+      params: {
+        s: stats,
+        m: messages,
+      },
     });
     return data;
   }
