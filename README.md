@@ -30,8 +30,54 @@ const comet= new Comet('api-key','cometId');
 ### Now you can start prompting the comet service
 
 ```ts
-const response = comet.prompt({input:"what is useCallback?",stream:false});
+const response = comet.prompt({input:"what is useCallback?",stream:false}); //returns sessionId along with the response
 ```
+This will create a new `Session` which can then be used in subsequent prompts to maintain messaging history, which can be particularly useful when using chat models. 
+To continue the prompting in the same session:
+
+```ts
+const response = comet.prompt({input:"what is useCallback?",stream:false,sessionId:'prevSession'});
+```
+
+### Prompt Sessions
+#### List Prompt Sessions
+```ts
+const sessions = comet.listSessions({});
+```
+
+#### Get details of a particular Session
+
+```ts
+const session = comet.getSession({sessionId:'someSessionId'});
+```
+
+A `Session` consists of one or more `Conversations` which in turn are usally just a single prompt and its response (for example: pair of one human and one agent `Message`).
+The `Conversation` model is created to better handle human feedback.
+
+A conversation can also contain messages from functions, system too.
+### Conversations
+
+#### List Conversations of a Session
+```ts
+const conversations = comet.listConversations({sessionId:'sessionId',stats:false,messages:true}); //defaults: stats:false messages:false
+```
+This lists all the conversations of a session along with its messages but omits the conversation stats
+
+
+
+#### Get messages and details of a particular Conversation
+
+```ts
+const conversation = comet.getConversation({conversationId:'convoId'});
+```
+
+### Messages
+
+#### Get Message
+```ts
+const message = comet.getMessage({messageId:'mId'});
+```
+
 
 
 ### Available Routes

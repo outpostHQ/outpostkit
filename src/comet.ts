@@ -9,6 +9,8 @@ import {
   type GetMessagePayload,
   type ProvideMessageFeedbackPayload,
   type IComet,
+  ListSessionsPayload,
+  GetSessionPayload,
 } from './types';
 import { streamPromptWithAxios, streamPromptWithNativeFetch } from 'helpers';
 
@@ -55,9 +57,28 @@ export class Comet implements IComet {
     await this.cometAPI.post(`/model`, payload);
   }
 
-  async listConversations(payload: ListConversationsPayload): Promise<object> {
-    const { data } = await this.cometAPI.get<object>(`/conversations`, {
+  async listSessions(payload: ListSessionsPayload = {}): Promise<object> {
+    const { data } = await this.cometAPI.get<object>(`/sessions`, {
       params: payload,
+    });
+    return data;
+  }
+
+  async getSession({ sessionId }: GetSessionPayload): Promise<object> {
+    const { data } = await this.cometAPI.get<object>(`/sessions/${sessionId}`);
+    return data;
+  }
+
+  async listConversations({
+    sessionId,
+    stats,
+    messages,
+  }: ListConversationsPayload): Promise<object> {
+    const { data } = await this.cometAPI.get<object>(`/sessions/${sessionId}/conversations`, {
+      params: {
+        s: stats,
+        m: messages,
+      },
     });
     return data;
   }
@@ -72,11 +93,11 @@ export class Comet implements IComet {
     return data;
   }
 
-  async provideMessageFeedback({
-    messageId,
+  async takeConversationFeedback({
+    conversationId,
     ...feedbackBody
   }: ProvideMessageFeedbackPayload): Promise<void> {
-    await this.cometAPI.post(`/messages/${messageId}/feedback`, feedbackBody);
+    await this.cometAPI.post(`/conversations/${conversationId}/feedback`, feedbackBody);
   }
 
   async deleteComet(): Promise<void> {

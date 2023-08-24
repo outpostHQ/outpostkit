@@ -31,7 +31,7 @@ export interface IComet {
   listConversations: (payload: ListConversationsPayload) => Promise<object>;
   getConversation: (payload: GetConversationPayload) => Promise<object>;
   getMessage: (payload: GetMessagePayload) => Promise<object>;
-  provideMessageFeedback: (payload: ProvideMessageFeedbackPayload) => Promise<void>;
+  takeConversationFeedback: (payload: ProvideMessageFeedbackPayload) => Promise<void>;
   deleteComet: () => Promise<void>;
 }
 
@@ -77,7 +77,7 @@ export interface PromptPayload {
   prompt_variables?: Record<string, string>;
   channel?: string;
   visitorId?: string;
-  conversationId?: string;
+  sessionId?: string;
   stream: boolean;
   configs?: {
     max_tokens?: number;
@@ -89,9 +89,18 @@ export interface PromptPayload {
 }
 
 export interface ListConversationsPayload {
+  sessionId: string;
+  messages?: boolean;
+  stats?: boolean;
+}
+
+export interface ListSessionsPayload {
   userId?: string;
   channel?: string;
   visitorId?: string;
+}
+export interface GetSessionPayload {
+  sessionId: string;
 }
 export interface GetConversationPayload {
   conversationId: string;
@@ -101,7 +110,7 @@ export interface GetMessagePayload {
 }
 
 export interface ProvideMessageFeedbackPayload {
-  messageId: string;
+  conversationId: string;
   vote?: boolean;
   feedback?: string;
   meta?: object;
