@@ -1,22 +1,22 @@
 // Memory Client
 export interface MemoryClient {
-  addMemory: (sessionId: string, payload: Memory) => Promise<Memory>
-  getMemory: (sessionId: string) => Promise<Memory>
-  deleteMemory: (sessionId: string) => Promise<void>
+  addMemory: (sessionId: string, payload: Memory) => Promise<Memory>;
+  getMemory: (sessionId: string) => Promise<Memory>;
+  deleteMemory: (sessionId: string) => Promise<void>;
 }
 
 export interface MemoryConfig {
-  apiKey?: string
-  clientId?: string
-  baseUrl?: string
+  apiKey?: string;
+  clientId?: string;
+  baseUrl?: string;
 }
 
 export interface Memory {
   messages: Array<{
-    content: string
-    role: 'Human' | 'AI'
-  }>
-  context?: string
+    content: string;
+    role: 'Human' | 'AI';
+  }>;
+  context?: string;
 }
 
 // Comet Client
@@ -24,7 +24,7 @@ export interface IComet {
   prompt: (
     payload: PromptPayload,
     handleNewText?: (data: string) => void | Promise<void>
-  ) => Promise<any>;
+  ) => Promise<TCometPromptResponse>;
   updateConfig: (payload: UpdateConfigPayload) => Promise<void>;
   setGenerationModel: (payload: SetGenerationModelPayload) => Promise<void>;
   getMessage: (payload: GetMessagePayload) => Promise<ICometMessage>;
@@ -255,3 +255,22 @@ export interface ICometMessage {
   conversationId: string;
   createdAt: string;
 }
+
+export type TCometPromptResponse = {
+  text: string;
+  referencePaths?: string[];
+  referencesWithSources?: {
+    path: string;
+    source_id: string;
+  }[];
+  usage: {
+    prompt_tokens: number;
+    completion_tokens: number;
+  };
+  conversationId?: string;
+  sessionId?: string;
+};
+
+export type TCometPromptStreamResponseError = {
+  error: string;
+};

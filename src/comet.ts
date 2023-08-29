@@ -7,7 +7,9 @@ import type {
   ProvideMessageFeedbackPayload,
   IComet,
   ListSessionsPayload,
-  ICometSession,
+  GetSessionPayload,
+  TCometPromptResponse,
+  ICometSession
 } from './types';
 import { streamPromptWithAxios, streamPromptWithNativeFetch } from 'helpers';
 
@@ -38,11 +40,33 @@ export class Comet implements IComet {
     //TODO: better error handling
     if (payload.stream) {
       if (typeof window !== 'undefined') {
-        return await streamPromptWithNativeFetch(this.cometId, this.apiKey, payload, handleNewText);
-      } else return await streamPromptWithAxios(this.cometAPI, payload, handleNewText);
+        const resp = await streamPromptWithNativeFetch(
+          this.cometId,
+          this.apiKey,
+          payload,
+          handleNewText
+        );
+
+        // @ts-ignore
+        if (resp.error) {
+          // @ts-ignore
+          throw new Error(resp.error);
+        } else {
+          return resp as TCometPromptResponse;
+        }
+      } else {
+        const resp = await streamPromptWithAxios(this.cometAPI, payload, handleNewText);
+        // @ts-ignore
+        if (resp.error) {
+          // @ts-ignore
+          throw new Error(resp.error);
+        } else {
+          return resp as TCometPromptResponse;
+        }
+      }
     } else {
       const { data } = await this.cometAPI.post(`/prompt`, payload);
-      return data;
+      return data as TCometPromptResponse;
     }
   }
 
