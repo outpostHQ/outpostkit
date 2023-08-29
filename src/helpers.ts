@@ -1,7 +1,8 @@
 import { AxiosInstance } from 'axios';
 import { PROMPT_STREAM_RESPONSE_PREFIX } from './constants';
 import { API_V1_URL } from './constants';
-import { PromptPayload } from 'types';
+import { PromptPayload, TCometPromptResponse } from 'types';
+import { TCometPromptStreamResponseError } from './types';
 
 export function sanitizeFilename(filename: string): string {
   const splitFilename = filename.split('.');
@@ -18,7 +19,7 @@ export const streamPromptWithNativeFetch = (
   payload: PromptPayload,
   handleNewText?: (token: string) => void | Promise<void>
 ) => {
-  return new Promise<{ response: string; referencePaths: string[] }>((resolve, reject) => {
+  return new Promise<TCometPromptResponse | TCometPromptStreamResponseError>((resolve, reject) => {
     (async () => {
       const response = await fetch(`${API_V1_URL}/comets/${cometId}/prompt`, {
         method: 'POST',
@@ -56,12 +57,7 @@ export const streamPromptWithNativeFetch = (
           }
           if (done) {
             try {
-              return resolve(
-                JSON.parse(responseText) as {
-                  response: string;
-                  referencePaths: string[];
-                }
-              );
+              return resolve(JSON.parse(responseText));
             } catch (e) {
               return reject('Could not parse the response');
             }
@@ -79,7 +75,7 @@ export const streamPromptWithAxios = (
   payload: PromptPayload,
   handleNewText?: (token: string) => void | Promise<void>
 ) => {
-  return new Promise((resolve, reject) => {
+  return new Promise<TCometPromptResponse | TCometPromptStreamResponseError>((resolve, reject) => {
     (async () => {
       const { data: stream } = await cometAPI.post(`/prompt`, payload, {
         responseType: 'stream',
@@ -104,7 +100,7 @@ export const streamPromptWithAxios = (
       });
 
       stream.on('end', () => {
-        return resolve(responseText);
+        return resolve(JSON.parse(responseText));
       });
     })();
   });
