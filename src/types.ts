@@ -21,18 +21,33 @@ export interface Memory {
 
 // Comet Client
 export interface IComet {
-  // index: (payload: IndexInput) => Promise<object>
   prompt: (
     payload: PromptPayload,
     handleNewText?: (data: string) => void | Promise<void>
   ) => Promise<TCometPromptResponse>;
   updateConfig: (payload: UpdateConfigPayload) => Promise<void>;
   setGenerationModel: (payload: SetGenerationModelPayload) => Promise<void>;
-  listConversations: (payload: ListConversationsPayload) => Promise<object>;
-  getConversation: (payload: GetConversationPayload) => Promise<object>;
-  getMessage: (payload: GetMessagePayload) => Promise<object>;
+  getMessage: (payload: GetMessagePayload) => Promise<ICometMessage>;
   takeConversationFeedback: (payload: ProvideMessageFeedbackPayload) => Promise<void>;
   deleteComet: () => Promise<void>;
+  getCometInfo: () => Promise<ICometInfo>;
+  listSessions: (payload: ListSessionsPayload) => Promise<ICometSession[]>;
+  getSession: (payload: GetSessionPayload) => Promise<ICometSession>;
+  listConversations: <M extends boolean, S extends boolean>(
+    payload: ListConversationsPayload
+  ) => Promise<
+    Array<
+      ICometConversation & {
+        messages: M extends true ? ICometMessage[] : never;
+        stats: S extends true ? ICometConversationStats | null : never;
+      }
+    >
+  >;
+  getConversation: (
+    payload: GetConversationPayload
+  ) => Promise<
+    ICometConversation & { messages: ICometMessage[]; stats: ICometConversationStats | null }
+  >;
 }
 
 export interface IndexInput {
