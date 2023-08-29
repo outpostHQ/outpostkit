@@ -1,5 +1,11 @@
 # outpostkit
 
+## 0.0.10
+
+### Patch Changes
+
+- [#17](https://github.com/OutpostHQ/outpostkit/pull/17) [`d41f809`](https://github.com/OutpostHQ/outpostkit/commit/d41f809bbbc42ea2bb2dd9a684ece64e7a990c60) Thanks [@aj-ya](https://github.com/aj-ya)! - added types for comet, conversation, session, message and conversation stats.
+
 ## 0.0.9
 
 ### Patch Changes
