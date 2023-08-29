@@ -1,16 +1,13 @@
 import axios, { type AxiosInstance } from 'axios';
-import { API_V1_URL, PROMPT_STREAM_RESPONSE_PREFIX } from './constants';
-import {
-  type UpdateConfigPayload,
-  type PromptPayload,
-  type SetGenerationModelPayload,
-  type ListConversationsPayload,
-  type GetConversationPayload,
-  type GetMessagePayload,
-  type ProvideMessageFeedbackPayload,
-  type IComet,
+import { API_V1_URL } from './constants';
+import type {
+  UpdateConfigPayload,
+  PromptPayload,
+  SetGenerationModelPayload,
+  ProvideMessageFeedbackPayload,
+  IComet,
   ListSessionsPayload,
-  GetSessionPayload,
+  ICometSession,
 } from './types';
 import { streamPromptWithAxios, streamPromptWithNativeFetch } from 'helpers';
 
@@ -32,8 +29,8 @@ export class Comet implements IComet {
     });
   }
 
-  async getCometInfo(): Promise<object> {
-    const { data } = await this.cometAPI.get<object>('/');
+  async getCometInfo() {
+    const { data } = await this.cometAPI.get('/');
     return data;
   }
 
@@ -57,24 +54,20 @@ export class Comet implements IComet {
     await this.cometAPI.post(`/model`, payload);
   }
 
-  async listSessions(payload: ListSessionsPayload = {}): Promise<object> {
-    const { data } = await this.cometAPI.get<object>(`/sessions`, {
+  async listSessions(payload: ListSessionsPayload = {}) {
+    const { data } = await this.cometAPI.get(`/sessions`, {
       params: payload,
     });
     return data;
   }
 
-  async getSession({ sessionId }: GetSessionPayload): Promise<object> {
-    const { data } = await this.cometAPI.get<object>(`/sessions/${sessionId}`);
+  async getSession({ sessionId }) {
+    const { data } = await this.cometAPI.get<ICometSession>(`/sessions/${sessionId}`);
     return data;
   }
 
-  async listConversations({
-    sessionId,
-    stats,
-    messages,
-  }: ListConversationsPayload): Promise<object> {
-    const { data } = await this.cometAPI.get<object>(`/sessions/${sessionId}/conversations`, {
+  async listConversations({ sessionId, stats, messages }) {
+    const { data } = await this.cometAPI.get(`/sessions/${sessionId}/conversations`, {
       params: {
         s: stats,
         m: messages,
@@ -83,13 +76,13 @@ export class Comet implements IComet {
     return data;
   }
 
-  async getConversation({ conversationId }: GetConversationPayload): Promise<object> {
-    const { data } = await this.cometAPI.get<object>(`/conversations/${conversationId}`);
+  async getConversation({ conversationId }) {
+    const { data } = await this.cometAPI.get(`/conversations/${conversationId}`);
     return data;
   }
 
-  async getMessage({ messageId }: GetMessagePayload): Promise<object> {
-    const { data } = await this.cometAPI.get<object>(`/messages/${messageId}`);
+  async getMessage({ messageId }) {
+    const { data } = await this.cometAPI.get(`/messages/${messageId}`);
     return data;
   }
 

@@ -21,18 +21,33 @@ export interface Memory {
 
 // Comet Client
 export interface IComet {
-  // index: (payload: IndexInput) => Promise<object>
   prompt: (
     payload: PromptPayload,
     handleNewText?: (data: string) => void | Promise<void>
   ) => Promise<any>;
   updateConfig: (payload: UpdateConfigPayload) => Promise<void>;
   setGenerationModel: (payload: SetGenerationModelPayload) => Promise<void>;
-  listConversations: (payload: ListConversationsPayload) => Promise<object>;
-  getConversation: (payload: GetConversationPayload) => Promise<object>;
-  getMessage: (payload: GetMessagePayload) => Promise<object>;
+  getMessage: (payload: GetMessagePayload) => Promise<ICometMessage>;
   takeConversationFeedback: (payload: ProvideMessageFeedbackPayload) => Promise<void>;
   deleteComet: () => Promise<void>;
+  getCometInfo: () => Promise<ICometInfo>;
+  listSessions: (payload: ListSessionsPayload) => Promise<ICometSession[]>;
+  getSession: (payload: GetSessionPayload) => Promise<ICometSession>;
+  listConversations: <M extends boolean, S extends boolean>(
+    payload: ListConversationsPayload
+  ) => Promise<
+    Array<
+      ICometConversation & {
+        messages: M extends true ? ICometMessage[] : never;
+        stats: S extends true ? ICometConversationStats | null : never;
+      }
+    >
+  >;
+  getConversation: (
+    payload: GetConversationPayload
+  ) => Promise<
+    ICometConversation & { messages: ICometMessage[]; stats: ICometConversationStats | null }
+  >;
 }
 
 export interface IndexInput {
@@ -131,51 +146,112 @@ export interface SetGenerationModelPayload {
   vendor: 'openai';
 }
 
-
 export interface SearchPayload {
-  index: string
-  imageBase64?: string
-  imageUrl?: string
-  text?: string
-  embedding?: number[]
-  filters?: Filters
+  index: string;
+  imageBase64?: string;
+  imageUrl?: string;
+  text?: string;
+  embedding?: number[];
+  filters?: Filters;
 }
 
 export interface TuningInput {
-  indexId?: string
-  idA: string
-  idB: string
-  label: -1 | 0 | 1
+  indexId?: string;
+  idA: string;
+  idB: string;
+  label: -1 | 0 | 1;
 }
 
 export interface TuningPayload {
-  index: string
-  idA: string
-  idB: string
-  label: -1 | 0 | 1
+  index: string;
+  idA: string;
+  idB: string;
+  label: -1 | 0 | 1;
 }
 
 export interface CreateResourcePayload {
-  indexId: string
-  fileName: string
-  fileType: string
-  fileSize: number
+  indexId: string;
+  fileName: string;
+  fileType: string;
+  fileSize: number;
 }
 
 export interface UploadFileToUrlPayload {
-  url: string
-  file: File | Buffer
-  fileType: string
-  fileSize: number
+  url: string;
+  file: File | Buffer;
+  fileType: string;
+  fileSize: number;
 }
 
-export type UploadFilePayload = File | string
+export type UploadFilePayload = File | string;
 
 export interface FilePayload {
-  fileName: string
-  fileType: string
+  fileName: string;
+  fileType: string;
 }
 
 export interface CreateFileResouceResponse {
-  url: string
+  url: string;
+}
+
+export type CometAIModelType = 'text' | 'chat';
+export interface ICometInfo {
+  projectId: string;
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+  creatorId: string;
+  thirdPartyKeyId: string | null;
+  confluxId: string | null;
+  name: string;
+  configs: Record<string, any> | null;
+  whitelistedDomains: string[];
+  promptVariables: Record<string, string>;
+  promptTemplate: string | null;
+  promptTokenLimit: number | null;
+  sectionsMatchThreshold: number | null;
+  sectionMatchCount: number | null;
+  contextTokenCutoff: number | null;
+  model: string;
+  modelVendor: string;
+  modelType: CometAIModelType;
+  conversationHistoryCutoff?: string;
+}
+
+export interface ICometSession {
+  id: string;
+  channel: string;
+  metadata: Record<string, any>;
+  userId: string;
+  visitorId: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ICometConversationStats {
+  id: string;
+  feedback: string | null;
+  noResponse: boolean;
+  upvoted: boolean;
+  updatedAt: string;
+  downvoted: boolean;
+  processed: boolean;
+}
+
+export interface ICometConversation {
+  id: string;
+  metadata: Record<string, any> | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type CometMessageAuthor = 'agent' | 'human' | 'system' | 'function';
+
+export interface ICometMessage {
+  id: string;
+  text: string;
+  from: CometMessageAuthor;
+  meta: Record<string, any> | null;
+  conversationId: string;
+  createdAt: string;
 }
