@@ -1,5 +1,11 @@
 # outpostkit
 
+## 0.0.11
+
+### Patch Changes
+
+- [#19](https://github.com/OutpostHQ/outpostkit/pull/19) [`2450618`](https://github.com/OutpostHQ/outpostkit/commit/2450618701e052dd9325c6e3bba6ee54e7aa74d9) Thanks [@aj-ya](https://github.com/aj-ya)! - added prompt response type and error handling
+
 ## 0.0.10
 
 ### Patch Changes
