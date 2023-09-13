@@ -64,7 +64,9 @@ export const streamPromptWithNativeFetch = (
           }
         }
       } else {
-        return reject(`Request failed.`);
+        if (response.headers.get('Content-Type') === 'application/json')
+          return reject({ body: await response.json(), status: response.status });
+        else return reject(`Request failed.`);
       }
     })();
   });
