@@ -1,5 +1,11 @@
 # outpostkit
 
+## 0.0.12
+
+### Patch Changes
+
+- [`3d5a4d8`](https://github.com/OutpostHQ/outpostkit/commit/3d5a4d81dd67ff221c25822267489df8a39d5471) Thanks [@aj-ya](https://github.com/aj-ya)! - added better error observability
+
 ## 0.0.11
 
 ### Patch Changes
