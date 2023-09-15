@@ -158,10 +158,10 @@ export const streamPromptWithEventStreaming = async (
           }
         }
       },
-      onclose() {
-        // if the server closes the connection unexpectedly, retry:
-        throw new ClientError('Server closed connection.');
-      },
+      // onclose() {
+      //   // if the server closes the connection unexpectedly, retry:
+      //   throw new ClientError('Server closed connection.');
+      // },
       onerror(err) {
         throw err; // rethrow to stop the operation
       },
