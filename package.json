@@ -28,6 +28,7 @@
     "release": "changeset publish"
   },
   "dependencies": {
+    "@microsoft/fetch-event-source": "^2.0.1",
     "axios": "^1.4.0",
     "mime-types": "^2.1.35"
   },

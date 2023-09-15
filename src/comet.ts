@@ -1,17 +1,21 @@
 import axios, { type AxiosInstance } from 'axios';
 import { API_V1_URL } from './constants';
 import type {
-  UpdateConfigPayload,
+  UpdateCometPayload,
   PromptPayload,
-  SetGenerationModelPayload,
+  UpdateModelPayload,
   ProvideMessageFeedbackPayload,
   IComet,
   ListSessionsPayload,
-  GetSessionPayload,
   TCometPromptResponse,
-  ICometSession
+  ICometSession,
+  PromptOptions,
 } from './types';
-import { streamPromptWithAxios, streamPromptWithNativeFetch } from 'helpers';
+import {
+  streamPromptWithAxios,
+  streamPromptWithEventStreaming,
+  streamPromptWithNativeFetch,
+} from 'helpers';
 
 export class Comet implements IComet {
   readonly apiKey: string;
@@ -36,23 +40,43 @@ export class Comet implements IComet {
     return data;
   }
 
-  async prompt(payload: PromptPayload, handleNewText?: (data: string) => void | Promise<void>) {
+  async prompt(
+    payload: PromptPayload,
+    handleNewText?: (data: string) => void | Promise<void>,
+    options?: PromptOptions
+  ) {
     //TODO: better error handling
     if (payload.stream) {
       if (typeof window !== 'undefined') {
-        const resp = await streamPromptWithNativeFetch(
-          this.cometId,
-          this.apiKey,
-          payload,
-          handleNewText
-        );
+        if (options?.useNativeFetch) {
+          const resp = await streamPromptWithNativeFetch(
+            this.cometId,
+            this.apiKey,
+            payload,
+            handleNewText
+          );
 
-        // @ts-ignore
-        if (resp.error) {
           // @ts-ignore
-          throw new Error(resp.error);
+          if (resp.error) {
+            // @ts-ignore
+            throw new Error(resp.error);
+          } else {
+            return resp as TCometPromptResponse;
+          }
         } else {
-          return resp as TCometPromptResponse;
+          const resp = await streamPromptWithEventStreaming(
+            this.cometId,
+            this.apiKey,
+            payload,
+            handleNewText
+          );
+          // @ts-ignore
+          if (resp.error) {
+            // @ts-ignore
+            throw new Error(resp.error);
+          } else {
+            return resp as TCometPromptResponse;
+          }
         }
       } else {
         const resp = await streamPromptWithAxios(this.cometAPI, payload, handleNewText);
@@ -70,11 +94,11 @@ export class Comet implements IComet {
     }
   }
 
-  async updateConfig(payload: UpdateConfigPayload): Promise<void> {
+  async update(payload: UpdateCometPayload): Promise<void> {
     await this.cometAPI.put(`/`, payload);
   }
 
-  async setGenerationModel(payload: SetGenerationModelPayload): Promise<void> {
+  async updateModel(payload: UpdateModelPayload): Promise<void> {
     await this.cometAPI.post(`/model`, payload);
   }
 

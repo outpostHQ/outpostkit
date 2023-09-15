@@ -3,6 +3,8 @@ import { PROMPT_STREAM_RESPONSE_PREFIX } from './constants';
 import { API_V1_URL } from './constants';
 import { PromptPayload, TCometPromptResponse } from 'types';
 import { TCometPromptStreamResponseError } from './types';
+import { EventStreamContentType, fetchEventSource } from '@microsoft/fetch-event-source';
+import { APIError } from 'error';
 
 export function sanitizeFilename(filename: string): string {
   const splitFilename = filename.split('.');
@@ -106,4 +108,72 @@ export const streamPromptWithAxios = (
       });
     })();
   });
+};
+
+class ClientError extends Error {}
+// class FatalError extends Error {}
+
+export const streamPromptWithEventStreaming = async (
+  cometId: string,
+  apiKey: string,
+  payload: PromptPayload,
+  handleNewText?: (token: string) => void | Promise<void>
+): Promise<TCometPromptResponse | TCometPromptStreamResponseError> => {
+  try {
+    let finalResponse: TCometPromptResponse | TCometPromptStreamResponseError;
+    await fetchEventSource(`${API_V1_URL}/comets/${cometId}/prompt`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'text/event-stream',
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify(payload),
+      async onopen(response) {
+        if (response.ok && response.headers.get('content-type') === EventStreamContentType) {
+          return; // everything's good
+        } else {
+          if (response.headers.get('content-type') === 'application/json') {
+            const body = await response.json();
+            throw new APIError({ status: response.status, message: body?.message });
+          } else {
+            throw new APIError({
+              status: response.status,
+              message: `Request failed with status code: ${response.status}`,
+            });
+          }
+        }
+      },
+      onmessage(msg) {
+        // if the server emits an error message, throw an exception
+        // so it gets handled by the onerror callback below:
+        if (msg.event === 'token') {
+          handleNewText(msg.data);
+        } else if (msg.event === 'response') {
+          try {
+            finalResponse = JSON.parse(msg.data);
+          } catch (e) {
+            throw new ClientError('Encountered error while parsing response into JSON.');
+          }
+        }
+      },
+      onclose() {
+        // if the server closes the connection unexpectedly, retry:
+        throw new ClientError('Server closed connection.');
+      },
+      onerror(err) {
+        throw err; // rethrow to stop the operation
+      },
+
+      // signal: ctrl.signal,
+    });
+    return finalResponse;
+  } catch (e) {
+    if (e instanceof APIError) {
+      return { error: e.message };
+    } else {
+      console.error('Unknown Error while prompting:', e);
+      return { error: e?.message || 'Unknown Error' };
+    }
+  }
 };

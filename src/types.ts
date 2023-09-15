@@ -23,10 +23,11 @@ export interface Memory {
 export interface IComet {
   prompt: (
     payload: PromptPayload,
-    handleNewText?: (data: string) => void | Promise<void>
+    handleNewText?: (data: string) => void | Promise<void>,
+    options?: PromptOptions
   ) => Promise<TCometPromptResponse>;
-  updateConfig: (payload: UpdateConfigPayload) => Promise<void>;
-  setGenerationModel: (payload: SetGenerationModelPayload) => Promise<void>;
+  update: (payload: UpdateCometPayload) => Promise<void>;
+  updateModel: (payload: UpdateModelPayload) => Promise<void>;
   getMessage: (payload: GetMessagePayload) => Promise<ICometMessage>;
   takeConversationFeedback: (payload: ProvideMessageFeedbackPayload) => Promise<void>;
   deleteComet: () => Promise<void>;
@@ -60,6 +61,9 @@ export interface IndexInput {
   metadata?: object;
 }
 
+export interface PromptOptions {
+  useNativeFetch?: boolean;
+}
 export interface IndexPayload {
   index: string;
   id?: string;
@@ -131,19 +135,16 @@ export interface ProvideMessageFeedbackPayload {
   meta?: object;
 }
 
-export interface UpdateConfigPayload {
-  max_tokens?: number;
-  temperature?: number;
-  top_p?: number;
-  presence_penalty?: number;
-  frequency_penalty?: number;
-  stream: false;
+export interface UpdateCometPayload {
+  sectionsMatchThreshold?: number;
+  sectionMatchCount?: number;
+  name?: string;
 }
-
-export interface SetGenerationModelPayload {
-  name: string;
-  type: 'text' | 'chat';
-  vendor: 'openai';
+export type TCometModelType = 'selfhosted' | 'thirdparty';
+export interface UpdateModelPayload {
+  type?: TCometModelType;
+  details?: { name: string; vendor: 'openai' };
+  configs?: object;
 }
 
 export interface SearchPayload {
@@ -257,7 +258,7 @@ export interface ICometMessage {
 }
 
 export type TCometPromptResponse = {
-  text: string;
+  generations: string[];
   referencePaths?: string[];
   referencesWithSources?: {
     path: string;
