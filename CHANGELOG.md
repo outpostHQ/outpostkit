@@ -1,5 +1,11 @@
 # outpostkit
 
+## 0.0.14
+
+### Patch Changes
+
+- [`8ecb715`](https://github.com/OutpostHQ/outpostkit/commit/8ecb7153ca50cb2719321de299a00556149197af) Thanks [@aj-ya](https://github.com/aj-ya)! - fix for streaming
+
 ## 0.0.13
 
 ### Patch Changes

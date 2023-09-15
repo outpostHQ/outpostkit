@@ -1,6 +1,6 @@
 {
   "name": "outpostkit",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "description": "The Outpost API Node.js SDK with TypeScript support.",
   "homepage": "https://outpost.run",
   "repository": {
