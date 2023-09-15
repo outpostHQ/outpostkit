@@ -1,5 +1,11 @@
 # outpostkit
 
+## 0.0.15
+
+### Patch Changes
+
+- [#24](https://github.com/OutpostHQ/outpostkit/pull/24) [`4863ef1`](https://github.com/OutpostHQ/outpostkit/commit/4863ef14970161a49ad008d1751c73c11094b280) Thanks [@aj-ya](https://github.com/aj-ya)! - fixed stream response closing at end
+
 ## 0.0.14
 
 ### Patch Changes
