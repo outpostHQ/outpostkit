@@ -130,10 +130,12 @@ export const streamPromptWithEventStreaming = async (
       },
       body: JSON.stringify(payload),
       async onopen(response) {
-        if (response.ok && response.headers.get('content-type') === EventStreamContentType) {
+        const contentType = response.headers.get('content-type');
+        console.log(contentType);
+        if (response.ok && contentType === EventStreamContentType) {
           return; // everything's good
         } else {
-          if (response.headers.get('content-type') === 'application/json') {
+          if (contentType === 'application/json') {
             const body = await response.json();
             throw new APIError({ status: response.status, message: body?.message });
           } else {
