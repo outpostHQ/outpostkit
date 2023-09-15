@@ -131,8 +131,7 @@ export const streamPromptWithEventStreaming = async (
       body: JSON.stringify(payload),
       async onopen(response) {
         const contentType = response.headers.get('content-type');
-        console.log(contentType);
-        if (response.ok && contentType === EventStreamContentType) {
+        if (response.ok && contentType.includes(EventStreamContentType)) {
           return; // everything's good
         } else {
           if (contentType === 'application/json') {
