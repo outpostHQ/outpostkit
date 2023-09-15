@@ -1,5 +1,11 @@
 # outpostkit
 
+## 0.0.13
+
+### Patch Changes
+
+- [`699db2d`](https://github.com/OutpostHQ/outpostkit/commit/699db2d0ba57e1af21f0855b00769bda7619134f) Thanks [@aj-ya](https://github.com/aj-ya)! - added support for multiple responses and event streaming
+
 ## 0.0.12
 
 ### Patch Changes
