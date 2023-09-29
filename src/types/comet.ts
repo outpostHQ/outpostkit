@@ -1,24 +1,3 @@
-// Memory Client
-export interface MemoryClient {
-  addMemory: (sessionId: string, payload: Memory) => Promise<Memory>;
-  getMemory: (sessionId: string) => Promise<Memory>;
-  deleteMemory: (sessionId: string) => Promise<void>;
-}
-
-export interface MemoryConfig {
-  apiKey?: string;
-  clientId?: string;
-  baseUrl?: string;
-}
-
-export interface Memory {
-  messages: Array<{
-    content: string;
-    role: 'Human' | 'AI';
-  }>;
-  context?: string;
-}
-
 // Comet Client
 export interface IComet {
   prompt: (
@@ -50,44 +29,9 @@ export interface IComet {
     ICometConversation & { messages: ICometMessage[]; stats: ICometConversationStats | null }
   >;
 }
-export interface IndexInput {
-  indexId?: string;
-  id?: string;
-  imageBase64?: string;
-  imageUrl?: string;
-  text?: string;
-  embedding?: number[];
-  metadata?: object;
-}
 
 export interface PromptOptions {
   useNativeFetch?: boolean;
-}
-export interface IndexPayload {
-  index: string;
-  id?: string;
-  imageBase64?: string;
-  imageUrl?: string;
-  text?: string;
-  embedding?: number[];
-  metadata?: object;
-}
-
-export interface BulkIndexPayload {
-  data: IndexPayload[];
-}
-
-export type Operator = 'eq' | 'gt' | 'gte' | 'lt' | 'lte';
-
-export interface Filter {
-  field: string;
-  operator: Operator;
-  value: string | number;
-}
-
-export interface Filters {
-  and?: Filter[];
-  or?: Filter[];
 }
 
 export interface PromptPayload {
@@ -140,61 +84,15 @@ export interface UpdateCometPayload {
   name?: string;
 }
 export type TCometModelType = 'selfhosted' | 'thirdparty';
+
 export interface UpdateModelPayload {
   type?: TCometModelType;
   details?: { name: string; vendor: 'openai' };
   configs?: object;
 }
 
-export interface SearchPayload {
-  index: string;
-  imageBase64?: string;
-  imageUrl?: string;
-  text?: string;
-  embedding?: number[];
-  filters?: Filters;
-}
-
-export interface TuningInput {
-  indexId?: string;
-  idA: string;
-  idB: string;
-  label: -1 | 0 | 1;
-}
-
-export interface TuningPayload {
-  index: string;
-  idA: string;
-  idB: string;
-  label: -1 | 0 | 1;
-}
-
-export interface CreateResourcePayload {
-  indexId: string;
-  fileName: string;
-  fileType: string;
-  fileSize: number;
-}
-
-export interface UploadFileToUrlPayload {
-  url: string;
-  file: File | Buffer;
-  fileType: string;
-  fileSize: number;
-}
-
-export type UploadFilePayload = File | string;
-
-export interface FilePayload {
-  fileName: string;
-  fileType: string;
-}
-
-export interface CreateFileResouceResponse {
-  url: string;
-}
-
 export type CometAIModelType = 'text' | 'chat';
+
 export interface ICometInfo {
   projectId: string;
   id: string;
@@ -258,11 +156,13 @@ export interface ICometMessage {
 
 export type TCometPromptResponse = {
   generations: string[];
-  referencePaths?: string[];
-  referencesWithSources?: {
-    path: string;
-    source_id: string;
-  }[];
+  meta: {
+    referencePaths?: string[];
+    referencesWithSources?: {
+      path: string;
+      source_id: string;
+    }[];
+  };
   usage: {
     prompt_tokens: number;
     completion_tokens: number;

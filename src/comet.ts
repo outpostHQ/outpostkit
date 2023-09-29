@@ -10,7 +10,7 @@ import type {
   TCometPromptResponse,
   ICometSession,
   PromptOptions,
-} from './types';
+} from './types/comet';
 import {
   streamPromptWithAxios,
   streamPromptWithEventStreaming,

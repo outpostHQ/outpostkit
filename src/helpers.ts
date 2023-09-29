@@ -156,6 +156,8 @@ export const streamPromptWithEventStreaming = async (
           } catch (e) {
             throw new ClientError('Encountered error while parsing response into JSON.');
           }
+        } else if (msg.event==='error') {
+          
         }
       },
       // onclose() {
