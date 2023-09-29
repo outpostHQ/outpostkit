@@ -1,0 +1,5 @@
+---
+'outpostkit': patch
+---
+
+Inference server
