@@ -122,13 +122,13 @@ export const streamOpenAIInferenceServer = async (
       onmessage(msg) {
         // if the server emits an error message, throw an exception
         // so it gets handled by the onerror callback below:
-        if (msg.event === 'data') {
-          // const chunk = JSON.parse(msg.data) as VLLMOpenAICompletionsOutputType;
-          finalResponse += msg.data;
-          handleNewChunk(msg.data);
-        } else if (msg.event === 'error') {
-          console.error('error while streaming', msg.data);
-        }
+        // if (msg.event === 'data') {
+        // const chunk = JSON.parse(msg.data) as VLLMOpenAICompletionsOutputType;
+        finalResponse += msg.data;
+        handleNewChunk(msg.data);
+        // } else if (msg.event === 'error') {
+        // console.error('error while streaming', msg.data);
+        // }
       },
       // onclose() {
       //   // if the server closes the connection unexpectedly, retry:
