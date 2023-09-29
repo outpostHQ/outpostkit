@@ -1,5 +1,11 @@
 # outpostkit
 
+## 0.0.17
+
+### Patch Changes
+
+- [#29](https://github.com/OutpostHQ/outpostkit/pull/29) [`9aeaa44`](https://github.com/OutpostHQ/outpostkit/commit/9aeaa448a791a4f5759b0b88e3c42eef36934f92) Thanks [@aj-ya](https://github.com/aj-ya)! - Inference server
+
 ## 0.0.16
 
 ### Patch Changes
