@@ -1,5 +1,11 @@
 # outpostkit
 
+## 0.0.18
+
+### Patch Changes
+
+- [#31](https://github.com/OutpostHQ/outpostkit/pull/31) [`626ea7d`](https://github.com/OutpostHQ/outpostkit/commit/626ea7d1a8a669ddbd084496815bd5414fa6b01c) Thanks [@aj-ya](https://github.com/aj-ya)! - Inference streaming
+
 ## 0.0.17
 
 ### Patch Changes
