@@ -1,22 +1,19 @@
-import { API_V1_URL } from '../../constants';
-import { PromptPayload } from 'types';
 import { EventStreamContentType, fetchEventSource } from '@microsoft/fetch-event-source';
 import { APIError } from 'error';
+import { VLLMPromptParameters } from 'types/inference';
 
 export const streamGenericInferenceServer = (
-  cometId: string,
-  apiKey: string,
-  payload: PromptPayload,
+  domain: string,
+  payload: { prompt: string } & VLLMPromptParameters,
   handleNewChunk?: (chunk: string) => void | Promise<void>
 ) => {
   return new Promise<string>((resolve, reject) => {
     (async () => {
-      const response = await fetch(`${API_V1_URL}/comets/${cometId}/prompt`, {
+      const response = await fetch(`${domain}/generate`, {
         method: 'POST',
-        body: JSON.stringify(payload),
+        body: JSON.stringify({ ...payload, stream: true }),
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${apiKey}`,
           Accept: 'text/plain, application/json',
         },
       });
@@ -33,6 +30,7 @@ export const streamGenericInferenceServer = (
             let chunk = textDecoder.decode(value);
             responseText += chunk;
             console.log('chunk:', chunk);
+            handleNewChunk(chunk);
           }
           if (done) {
             try {
@@ -91,7 +89,7 @@ class ClientError extends Error {}
 // class FatalError extends Error {}
 
 export const streamOpenAIInferenceServer = async (
-  payload: PromptPayload,
+  payload: { prompt: string; model: string } & VLLMPromptParameters,
   domain: string,
   type: 'chat' | 'text',
   handleNewChunk?: (chunk: string) => void | Promise<void>
@@ -104,7 +102,7 @@ export const streamOpenAIInferenceServer = async (
         'Content-Type': 'application/json',
         Accept: 'text/event-stream',
       },
-      body: JSON.stringify(payload),
+      body: JSON.stringify({ ...payload, stream: true }),
       async onopen(response) {
         const contentType = response.headers.get('content-type');
         if (response.ok && contentType.includes(EventStreamContentType)) {
