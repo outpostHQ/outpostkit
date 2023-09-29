@@ -1,6 +1,6 @@
 import { EventStreamContentType, fetchEventSource } from '@microsoft/fetch-event-source';
 import { APIError } from 'error';
-import { VLLMPromptParameters } from 'types/inference';
+import { VLLMOpenAICompletionsOutputType, VLLMPromptParameters } from 'types/inference';
 
 export const streamGenericInferenceServer = (
   domain: string,
@@ -96,7 +96,7 @@ export const streamOpenAIInferenceServer = async (
 ): Promise<string> => {
   try {
     let finalResponse: string;
-    await fetchEventSource(`${domain}/v1/${type === 'chat' ? 'chat/' : ''}completions`, {
+    await fetchEventSource(`${domain}/v1/${type === 'chat' ? 'chat/completions' : 'completions'}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -123,6 +123,7 @@ export const streamOpenAIInferenceServer = async (
         // if the server emits an error message, throw an exception
         // so it gets handled by the onerror callback below:
         if (msg.event === 'data') {
+          // const chunk = JSON.parse(msg.data) as VLLMOpenAICompletionsOutputType;
           finalResponse += msg.data;
           handleNewChunk(msg.data);
         } else if (msg.event === 'error') {
