@@ -1,5 +1,11 @@
 # outpostkit
 
+## 0.0.20
+
+### Patch Changes
+
+- [#35](https://github.com/OutpostHQ/outpostkit/pull/35) [`617e548`](https://github.com/OutpostHQ/outpostkit/commit/617e548a549083fd1485d4c28e8ea4c98047ad67) Thanks [@aj-ya](https://github.com/aj-ya)! - event streaming bug fix related to msg.event
+
 ## 0.0.19
 
 ### Patch Changes
