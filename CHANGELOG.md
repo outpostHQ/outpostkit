@@ -1,5 +1,11 @@
 # outpostkit
 
+## 0.0.19
+
+### Patch Changes
+
+- [#33](https://github.com/OutpostHQ/outpostkit/pull/33) [`c22a4ef`](https://github.com/OutpostHQ/outpostkit/commit/c22a4ef3f502bdb3a3bcb29d54a5e2162ffe3238) Thanks [@aj-ya](https://github.com/aj-ya)! - Bug Fixes
+
 ## 0.0.18
 
 ### Patch Changes
