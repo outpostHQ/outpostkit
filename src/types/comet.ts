@@ -32,6 +32,7 @@ export interface IComet {
 
 export interface PromptOptions {
   useNativeFetch?: boolean;
+  signal?: AbortSignal;
 }
 
 export interface PromptPayload {

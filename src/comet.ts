@@ -53,7 +53,8 @@ export class Comet implements IComet {
             this.cometId,
             this.apiKey,
             payload,
-            handleNewText
+            handleNewText,
+            options?.signal
           );
 
           // @ts-ignore
@@ -68,7 +69,8 @@ export class Comet implements IComet {
             this.cometId,
             this.apiKey,
             payload,
-            handleNewText
+            handleNewText,
+            options?.signal
           );
           // @ts-ignore
           if (resp.error) {
@@ -79,7 +81,12 @@ export class Comet implements IComet {
           }
         }
       } else {
-        const resp = await streamPromptWithAxios(this.cometAPI, payload, handleNewText);
+        const resp = await streamPromptWithAxios(
+          this.cometAPI,
+          payload,
+          handleNewText,
+          options?.signal
+        );
         // @ts-ignore
         if (resp.error) {
           // @ts-ignore
@@ -89,7 +96,7 @@ export class Comet implements IComet {
         }
       }
     } else {
-      const { data } = await this.cometAPI.post(`/prompt`, payload);
+      const { data } = await this.cometAPI.post(`/prompt`, payload, { signal: options?.signal });
       return data as TCometPromptResponse;
     }
   }
