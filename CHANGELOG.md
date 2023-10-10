@@ -1,5 +1,11 @@
 # outpostkit
 
+## 0.0.21
+
+### Patch Changes
+
+- [#37](https://github.com/OutpostHQ/outpostkit/pull/37) [`8683f0c`](https://github.com/OutpostHQ/outpostkit/commit/8683f0ceec664768a4665fd28c85a2485885f08f) Thanks [@aj-ya](https://github.com/aj-ya)! - added abort feature
+
 ## 0.0.20
 
 ### Patch Changes
