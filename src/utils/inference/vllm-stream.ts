@@ -1,11 +1,12 @@
 import { EventStreamContentType, fetchEventSource } from '@microsoft/fetch-event-source';
 import { APIError } from 'error';
-import { VLLMOpenAICompletionsOutputType, VLLMPromptParameters } from 'types/inference';
+import { VLLMPromptParameters } from 'types/inference';
 
 export const streamGenericInferenceServer = (
   domain: string,
   payload: { prompt: string } & VLLMPromptParameters,
-  handleNewChunk?: (chunk: string) => void | Promise<void>
+  handleNewChunk?: (chunk: string) => void | Promise<void>,
+  signal?: AbortSignal
 ) => {
   return new Promise<string>((resolve, reject) => {
     (async () => {
@@ -16,6 +17,7 @@ export const streamGenericInferenceServer = (
           'Content-Type': 'application/json',
           Accept: 'text/plain, application/json',
         },
+        signal,
       });
       if (response.ok) {
         if (!response.body) return reject('No response body found.');
@@ -88,12 +90,17 @@ export const streamGenericInferenceServer = (
 class ClientError extends Error {}
 // class FatalError extends Error {}
 
-export const streamOpenAIInferenceServer = async (
-  payload: { prompt: string; model: string } & VLLMPromptParameters,
+export type ChatMessage = { role: 'system' | 'user' | 'assistant'; content: string };
+export async function streamOpenAIInferenceServer<T extends 'chat' | 'text'>(
+  payload: {
+    prompt: T extends 'chat' ? ChatMessage[] : T extends 'text' ? string : never;
+    model: string;
+  } & VLLMPromptParameters,
   domain: string,
-  type: 'chat' | 'text',
-  handleNewChunk?: (chunk: string) => void | Promise<void>
-): Promise<string> => {
+  type: T,
+  handleNewChunk?: (chunk: string) => void | Promise<void>,
+  signal?: AbortSignal
+): Promise<string> {
   try {
     let finalResponse: string;
     await fetchEventSource(`${domain}/v1/${type === 'chat' ? 'chat/completions' : 'completions'}`, {
@@ -102,6 +109,7 @@ export const streamOpenAIInferenceServer = async (
         'Content-Type': 'application/json',
         Accept: 'text/event-stream',
       },
+      signal,
       body: JSON.stringify({ ...payload, stream: true }),
       async onopen(response) {
         const contentType = response.headers.get('content-type');

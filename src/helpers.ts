@@ -19,7 +19,8 @@ export const streamPromptWithNativeFetch = (
   cometId: string,
   apiKey: string,
   payload: PromptPayload,
-  handleNewText?: (token: string) => void | Promise<void>
+  handleNewText?: (token: string) => void | Promise<void>,
+  signal?: AbortSignal
 ) => {
   return new Promise<TCometPromptResponse | TCometPromptStreamResponseError>((resolve, reject) => {
     (async () => {
@@ -31,6 +32,7 @@ export const streamPromptWithNativeFetch = (
           Authorization: `Bearer ${apiKey}`,
           Accept: 'text/plain, application/json',
         },
+        signal,
       });
       if (response.ok) {
         if (!response.body) return reject('No response body found.');
@@ -77,12 +79,14 @@ export const streamPromptWithNativeFetch = (
 export const streamPromptWithAxios = (
   cometAPI: AxiosInstance,
   payload: PromptPayload,
-  handleNewText?: (token: string) => void | Promise<void>
+  handleNewText?: (token: string) => void | Promise<void>,
+  signal?: AbortSignal
 ) => {
   return new Promise<TCometPromptResponse | TCometPromptStreamResponseError>((resolve, reject) => {
     (async () => {
       const { data: stream } = await cometAPI.post(`/prompt`, payload, {
         responseType: 'stream',
+        signal,
       });
       let responsePrefixReceived = false;
       let responseText: string = '';
@@ -117,7 +121,8 @@ export const streamPromptWithEventStreaming = async (
   cometId: string,
   apiKey: string,
   payload: PromptPayload,
-  handleNewText?: (token: string) => void | Promise<void>
+  handleNewText?: (token: string) => void | Promise<void>,
+  signal?: AbortSignal
 ): Promise<TCometPromptResponse | TCometPromptStreamResponseError> => {
   try {
     let finalResponse: TCometPromptResponse | TCometPromptStreamResponseError;
@@ -128,6 +133,7 @@ export const streamPromptWithEventStreaming = async (
         Accept: 'text/event-stream',
         Authorization: `Bearer ${apiKey}`,
       },
+      signal,
       body: JSON.stringify(payload),
       async onopen(response) {
         const contentType = response.headers.get('content-type');
@@ -156,8 +162,7 @@ export const streamPromptWithEventStreaming = async (
           } catch (e) {
             throw new ClientError('Encountered error while parsing response into JSON.');
           }
-        } else if (msg.event==='error') {
-          
+        } else if (msg.event === 'error') {
         }
       },
       // onclose() {
