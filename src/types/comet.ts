@@ -10,7 +10,7 @@ export interface IComet {
   getMessage: (payload: GetMessagePayload) => Promise<ICometMessage>;
   takeConversationFeedback: (payload: ProvideMessageFeedbackPayload) => Promise<void>;
   deleteComet: () => Promise<void>;
-  getCometInfo: () => Promise<ICometInfo>;
+  getInfo: () => Promise<ICometInfo>;
   listSessions: (payload: ListSessionsPayload) => Promise<ICometSession[]>;
   getSession: (payload: GetSessionPayload) => Promise<ICometSession>;
   listConversations: <M extends boolean, S extends boolean>(
@@ -95,8 +95,9 @@ export interface UpdateModelPayload {
 export type CometAIModelType = 'text' | 'chat';
 
 export interface ICometInfo {
-  projectId: string;
+  teamId: string;
   id: string;
+  fullName: string;
   createdAt: string;
   updatedAt: string;
   creatorId: string;

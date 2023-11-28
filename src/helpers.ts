@@ -118,7 +118,7 @@ class ClientError extends Error {}
 // class FatalError extends Error {}
 
 export const streamPromptWithEventStreaming = async (
-  cometId: string,
+  fullName: string,
   apiKey: string,
   payload: PromptPayload,
   handleNewText?: (token: string) => void | Promise<void>,
@@ -126,7 +126,7 @@ export const streamPromptWithEventStreaming = async (
 ): Promise<TCometPromptResponse | TCometPromptStreamResponseError> => {
   try {
     let finalResponse: TCometPromptResponse | TCometPromptStreamResponseError;
-    await fetchEventSource(`${API_V1_URL}/comets/${cometId}/prompt`, {
+    await fetchEventSource(`${API_V1_URL}/comets/${fullName}/prompt`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
