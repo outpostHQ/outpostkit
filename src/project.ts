@@ -1,17 +1,17 @@
 import axios, { type AxiosInstance } from 'axios';
 import { API_V1_URL } from './constants';
 
-export class Project {
+export class Team {
   readonly apiKey: string;
-  readonly projectId: string;
-  private readonly projectAPI: AxiosInstance;
+  readonly name: string;
+  private readonly teamAPI: AxiosInstance;
 
-  constructor(apiKey: string, projectId: string) {
+  constructor(apiKey: string, name: string) {
     this.apiKey = apiKey;
-    this.projectId = projectId;
+    this.name = name;
 
-    this.projectAPI = axios.create({
-      baseURL: `${API_V1_URL}/projects/${projectId}`,
+    this.teamAPI = axios.create({
+      baseURL: `${API_V1_URL}/teams/${name}`,
       headers: {
         Authorization: `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
@@ -19,18 +19,22 @@ export class Project {
     });
   }
 
-  async getProjectInfo(): Promise<void> {
-    const { data } = await this.projectAPI.get('/');
+  async getInfo(): Promise<void> {
+    const { data } = await this.teamAPI.get('/');
     return data;
   }
 
-  async listProjectComets(): Promise<object[]> {
-    const { data } = await this.projectAPI.get('/comets');
+  async listComets(): Promise<object[]> {
+    const { data } = await this.teamAPI.get('/services/comets');
     return data;
   }
 
-  async listProjectConfluxes(): Promise<object[]> {
-    const { data } = await this.projectAPI.get('/confluxes');
+  async listConfluxes(): Promise<object[]> {
+    const { data } = await this.teamAPI.get('/services/confluxes');
+    return data;
+  }
+  async listInferences(): Promise<object[]> {
+    const { data } = await this.teamAPI.get('/services/inferences');
     return data;
   }
 }

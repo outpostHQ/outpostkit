@@ -6,10 +6,10 @@ void (async () => {
     const apiKey = process.env.API_KEY;
     if (!apiKey) throw new Error('No API Key Provided.');
 
-    const cometId = process.env.COMET_ID;
-    if (!cometId) throw new Error('No Comet ID Provided.');
+    const fullName = process.env.COMET_FULLNAME;
+    if (!fullName) throw new Error('No Comet ID Provided.');
 
-    const comet = new Comet(apiKey, cometId);
+    const comet = new Comet(apiKey, fullName);
 
     const promptResponse = await comet.prompt({
       stream: false,

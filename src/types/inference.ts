@@ -1,5 +1,5 @@
 export interface IInference {
-  getInferenceInfo: () => Promise<any>;
+  getInfo: () => Promise<any>;
 }
 
 export interface VLLMOpenAICompletionsPayload {

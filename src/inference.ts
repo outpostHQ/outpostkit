@@ -9,15 +9,15 @@ import { IInference } from 'types/inference';
 
 export class Inference implements IInference {
   readonly apiKey: string;
-  readonly inferenceId: string;
+  readonly fullName: string;
   private readonly inferenceAPI: AxiosInstance;
 
-  constructor(apiKey: string, inferenceId: string) {
+  constructor(apiKey: string, fullName: string) {
     this.apiKey = apiKey;
-    this.inferenceId = inferenceId;
+    this.fullName = fullName;
 
     this.inferenceAPI = axios.create({
-      baseURL: `${API_V1_URL}/inference/${inferenceId}`,
+      baseURL: `${API_V1_URL}/inference/${fullName}`,
       headers: {
         Authorization: `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
@@ -25,7 +25,7 @@ export class Inference implements IInference {
     });
   }
 
-  async getInferenceInfo() {
+  async getInfo() {
     const { data } = await this.inferenceAPI.get('/');
     return data;
   }

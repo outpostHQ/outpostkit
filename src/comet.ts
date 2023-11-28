@@ -19,15 +19,15 @@ import {
 
 export class Comet implements IComet {
   readonly apiKey: string;
-  readonly cometId: string;
+  readonly fullName: string;
   private readonly cometAPI: AxiosInstance;
 
-  constructor(apiKey: string, cometId: string) {
+  constructor(apiKey: string, fullName: string) {
     this.apiKey = apiKey;
-    this.cometId = cometId;
+    this.fullName = fullName;
 
     this.cometAPI = axios.create({
-      baseURL: `${API_V1_URL}/comets/${cometId}`,
+      baseURL: `${API_V1_URL}/comets/${fullName}`,
       headers: {
         Authorization: `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
@@ -35,7 +35,7 @@ export class Comet implements IComet {
     });
   }
 
-  async getCometInfo() {
+  async getInfo() {
     const { data } = await this.cometAPI.get('/');
     return data;
   }
@@ -50,7 +50,7 @@ export class Comet implements IComet {
       if (typeof window !== 'undefined') {
         if (options?.useNativeFetch) {
           const resp = await streamPromptWithNativeFetch(
-            this.cometId,
+            this.fullName,
             this.apiKey,
             payload,
             handleNewText,
@@ -66,7 +66,7 @@ export class Comet implements IComet {
           }
         } else {
           const resp = await streamPromptWithEventStreaming(
-            this.cometId,
+            this.fullName,
             this.apiKey,
             payload,
             handleNewText,
