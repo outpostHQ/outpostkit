@@ -1,5 +1,11 @@
 # outpostkit
 
+## 0.0.22
+
+### Patch Changes
+
+- [#39](https://github.com/OutpostHQ/outpostkit/pull/39) [`c2c77d6`](https://github.com/OutpostHQ/outpostkit/commit/c2c77d66387038f02bf1a65e3071528cd6a75029) Thanks [@aj-ya](https://github.com/aj-ya)! - moved to fullname search for all resources
+
 ## 0.0.21
 
 ### Patch Changes
